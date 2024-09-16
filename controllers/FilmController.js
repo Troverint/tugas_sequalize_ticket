@@ -1,11 +1,17 @@
 import Film from "../model/FilmModel.js";
 
 export const createFilm = async (req, res) => {
-  const { title, genre, description, rating } = req.body;
+  const { title, genre, description, rating, sutradara } = req.body;
 
-  const film = await Film.create({ title, genre, description, rating });
+  const film = await Film.create({
+    title,
+    genre,
+    description,
+    rating,
+    sutradara,
+  });
 
-  res.status(201).json(film);
+  res.status(200).json({message : "film berhasil ditambahkan", film});
 };
 
 export const getFilms = async (req, res) => {
@@ -31,14 +37,14 @@ export const getFilmById = async (req, res) => {
 export const updateFilm = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, genre, description, rating } = req.body;
+    const { title, genre, description, rating, sutradara } = req.body;
     const [updated] = await Film.update(
-      { title, genre, description, rating },
+      { title, genre, description, rating, sutradara },
       { where: { id } }
     );
     if (updated) {
       const updatedFilm = await Film.findByPk(id);
-      res.status(200).json(updatedFilm);
+      res.status(200).json({message : "film berhasil di update", updatedFilm});
     } else {
       res.status(404).json({ message: "Film not found" });
     }
@@ -52,7 +58,7 @@ export const deleteFilm = async (req, res) => {
     const { id } = req.params;
     const deleted = await Film.destroy({ where: { id } });
     if (deleted) {
-      res.status(204).end();
+      res.status(200).json({ message: "Film berhasil dihapus" });
     } else {
       res.status(404).json({ message: "Film not found" });
     }

@@ -1,44 +1,41 @@
 import Ticket from "../model/TicketModel.js";
 import Film from "../model/FilmModel.js";
 import Pembeli from "../model/PembeliModel.js";
+import Screening from "../model/ScreeningModel.js";
+import Transaksi from "../model/TransaksiModel.js";
 
 export const createTicket = async (req, res) => {
-  const { studio, date, FilmId , PembeliId} = req.body;
+  const { nomor_bangku, harga, ScreeningId, PembeliId, TransaksiId } = req.body;
 
   try {
-    // Membuat film baru jika filmId tidak diberikan
-    let film = await Film.findByPk(FilmId);
-    if (!film) {
-      return res.status(400).json({ message: "Film not found" });
+    let screening = await Screening.findByPk(ScreeningId);
+    if (!screening) {
+      return res.status(400).json({ message: "Screening not found" });
     }
     let pembeli = await Pembeli.findByPk(PembeliId);
     if (!pembeli) {
       return res.status(400).json({ message: "Pembeli not found" });
     }
+    let transaki = await Transaksi.findByPk(TransaksiId);
+    if (!transaki) {
+      return res.status(400).json({ message: "Pembeli not found" });
+    }
 
-    // Membuat tiket
-    const ticketDate = date || new Date();
     const ticket = await Ticket.create({
-      studio,
-      date: ticketDate,
-      FilmId: FilmId,
+      nomor_bangku,
+      harga,
+      ScreeningId: ScreeningId,
       PembeliId: PembeliId,
+      TransaksiId: TransaksiId,
     });
 
-    // Membuat pembeli secara otomatis jika data pembeli dihapus dari request
-    // // Asumsikan pembeli dibuat dengan data default atau bisa dikustomisasi
-    // await Pembeli.create({
-    //   name: "Default Pembeli",
-    //   email: "default@example.com",
-    //   TicketId: Ticket.id,
-    // });
+    screening.bangku_tersedia -= 1;
+    await screening.save();
 
-    res.status(201).json({
-      message: "Ticket created successfully",
-      ticket,
-    });
+    return res.status(201).json({ message: "Ticket berhasil dibuat", ticket });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -47,14 +44,22 @@ export const getTickets = async (req, res) => {
     const tickets = await Ticket.findAll({
       include: [
         {
-          model: Film,
-          as: "Film",
+          model: Screening,
+          as: "Screening",
           required: true,
+          include: {
+            model: Film,
+            as: Film,
+          },
         },
         {
           model: Pembeli,
           as: "Pembeli",
           required: true,
+        },
+        {
+          model: Transaksi,
+          as: "Transaksi",
         },
       ],
     });
@@ -89,15 +94,24 @@ export const getTicketById = async (req, res) => {
 export const updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const { studio, date, FilmId, PembeliId } = req.body;
+    const { nomor_bangku, harga, ScreeningId, PembeliId, TransaksiId } =
+      req.body;
 
     const [updated] = await Ticket.update(
-      { studio, date, FilmId: FilmId, PembeliId : PembeliId },
+      {
+        nomor_bangku,
+        harga,
+        ScreeningId: ScreeningId,
+        PembeliId: PembeliId,
+        TransaksiId: TransaksiId,
+      },
       { where: { id } }
     );
     if (updated) {
       const updatedTicket = await Ticket.findByPk(id);
-      res.status(200).json(updatedTicket);
+      res
+        .status(200)
+        .json({ message: "ticked berhasil di update", updatedTicket });
     } else {
       res.status(404).json({ message: "Ticket not found" });
     }
@@ -109,9 +123,13 @@ export const updateTicket = async (req, res) => {
 export const deleteTicket = async (req, res) => {
   try {
     const { id } = req.params;
+    const screening = await Screening.findByPk(Ticket.ScreeningId);
+    screening.bangku_tersedia += 1;
+    await screening.save();
+
     const deleted = await Ticket.destroy({ where: { id } });
     if (deleted) {
-      res.status(204).end();
+      res.status(204).json({ message: "ticked berhasil terhapus" });
     } else {
       res.status(404).json({ message: "Ticket not found" });
     }

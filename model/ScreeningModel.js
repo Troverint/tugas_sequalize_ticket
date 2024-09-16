@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import db from "../utils/connection.js";
 import Film from "./FilmModel.js";
 import Ticket from "./TicketModel.js";
-const Pembeli = db.define(
-  "Pembeli",
+const Screening = db.define(
+  "Screening",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,22 +11,22 @@ const Pembeli = db.define(
       autoIncrement: true,
       allowNull: false,
     },
-    name: {
+    jadwal_pemutaran: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    studio: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
+    bangku_tersedia: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
   {
-    tableName: "Pembeli",
+    tableName: "Screening",
   }
 );
 
-export default Pembeli;
+export default Screening;

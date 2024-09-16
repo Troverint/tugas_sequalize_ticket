@@ -1,0 +1,38 @@
+//film post
+"title": "Inside Out",
+"genre": "Drama Comedy",
+"sutradara": "Pete Doctor",
+"description": "lorem ipsum dolor sit amet",
+"rating": 5
+
+
+//admin post
+"name": "Pajri",
+"email": "apa@gmail.com",
+"password": "admin123"
+
+//pembeli post
+"name": "dana",
+"email": "xyz@gmail.com",
+"password": "User123"
+
+
+//screening post
+"jadwal_pemutaran": "18:00 24 Februari 2007",
+"studio": "Studio 2",
+"bangku_tersedia": 80,
+"FilmId" : 1
+
+
+//transaksi
+"harga_total" : "20rb",
+"metode_pembayaran" : "QRIS",
+"status" : "pending"
+
+
+//ticket post
+"nomor_bangku": 2,
+"harga": "20rb",
+"ScreeningId": 1,
+"PembeliId": 1,
+"TransaksiId" : 1

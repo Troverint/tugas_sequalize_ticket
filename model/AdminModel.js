@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import db from "../utils/connection.js";
 import Film from "./FilmModel.js";
 import Ticket from "./TicketModel.js";
-const Pembeli = db.define(
-  "Pembeli",
+const Admin = db.define(
+  "Admin",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -25,8 +25,8 @@ const Pembeli = db.define(
     },
   },
   {
-    tableName: "Pembeli",
+    tableName: "Admin",
   }
 );
 
-export default Pembeli;
+export default Admin;

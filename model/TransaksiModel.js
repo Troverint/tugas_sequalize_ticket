@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import db from "../utils/connection.js";
 import Film from "./FilmModel.js";
 import Ticket from "./TicketModel.js";
-const Pembeli = db.define(
-  "Pembeli",
+const Transaksi = db.define(
+  "Transaksi",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,22 +11,26 @@ const Pembeli = db.define(
       autoIncrement: true,
       allowNull: false,
     },
-    name: {
+    harga_total: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    waktu_pembayaran: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    metode_pembayaran: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
+    status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-  },
+  }, 
   {
-    tableName: "Pembeli",
+    tableName: "Transaksi",
   }
 );
 
-export default Pembeli;
+export default Transaksi;

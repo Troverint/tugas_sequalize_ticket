@@ -2,8 +2,10 @@ import { DataTypes } from "sequelize";
 import db from "../utils/connection.js";
 import Film from "./FilmModel.js";
 import Pembeli from "./PembeliModel.js";
+import Screening from "./ScreeningModel.js";
+import Pembayaran from "./TransaksiModel.js";
+import Transaksi from "./TransaksiModel.js";
 const Ticket = db.define(
-  // memberikan nama model dengan nama User, secara default jika tidak memberikan tablename dibawah maka akan menjadi nama
   "Ticket",
   {
     id: {
@@ -12,12 +14,12 @@ const Ticket = db.define(
       autoIncrement: true,
       allowNull: false,
     },
-    studio: {
-      type: DataTypes.STRING,
+    nomor_bangku: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    date: {
-      type: DataTypes.DATE,
+    harga: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -26,17 +28,31 @@ const Ticket = db.define(
   }
 );
 
-Film.hasMany(Ticket, {
+//satu film memiliki bannyak screening
+Film.hasMany(Screening, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
-Ticket.belongsTo(Film, {
+Screening.belongsTo(Film, {
   foreignKey: "FilmId",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
 
+//satu screening bisa untuk banyak ticket
+Screening.hasMany(Ticket, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+Ticket.belongsTo(Screening, {
+  foreignKey: "ScreeningId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+//satu pembeli bisa memiliki banyak ticket
 Pembeli.hasMany(Ticket, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
@@ -44,6 +60,18 @@ Pembeli.hasMany(Ticket, {
 
 Ticket.belongsTo(Pembeli, {
   foreignKey: "PembeliId",
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+//satu ticket memiliki 1 transaksi
+Transaksi.hasMany(Ticket, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+});
+
+Ticket.belongsTo(Transaksi, {
+  foreignKey: "TransaksiId",
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
