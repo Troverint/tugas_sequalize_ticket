@@ -30,6 +30,10 @@ const Film = db.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     tableName: "Film",

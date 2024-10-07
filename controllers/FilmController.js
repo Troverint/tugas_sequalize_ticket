@@ -1,7 +1,7 @@
 import Film from "../model/FilmModel.js";
 
 export const createFilm = async (req, res) => {
-  const { title, genre, description, rating, sutradara } = req.body;
+  const { title, genre, description, rating, sutradara,image } = req.body;
 
   const film = await Film.create({
     title,
@@ -9,6 +9,7 @@ export const createFilm = async (req, res) => {
     description,
     rating,
     sutradara,
+    image
   });
 
   res.status(200).json({message : "film berhasil ditambahkan", film});

@@ -5,13 +5,14 @@ import Film from "./model/FilmModel.js";
 import "dotenv/config";
 import db from "./utils/connection.js";
 import "./model/index.js";
-
 import router from "./routes/Route.js";
 import bodyParser from "body-parser";
+import cors from "cors";
+
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
-
+app.use(cors());   
 app.use("/", router);
 const port = process.env.PORT;
 
